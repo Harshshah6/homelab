@@ -1,0 +1,22 @@
+services:
+  garage:
+    image: dxflrs/garage:v2.1.0
+    container_name: garage
+    restart: unless-stopped
+
+    ports:
+      - "3900:3900"   # S3 API
+      - "3901:3901"   # Admin API
+      - "3902:3902"   # Web UI
+
+    volumes:
+      - ./garage.toml:/etc/garage.toml:ro
+      - ./data:/var/lib/garage/data
+      - ./meta:/var/lib/garage/meta
+    
+    networks:
+      - nginx-proxy-manager
+
+networks:
+  nginx-proxy-manager:
+    external: true

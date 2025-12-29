@@ -1,0 +1,9 @@
+services:
+  oak:
+    container_name: 'oak'
+    image: 'ghcr.io/bert-mccutchen/oak:latest' # https://github.com/bert-mccutchen/oak
+    volumes:
+        - './data:/rails/storage'
+    ports:
+        - '3000:80'
+    restart: unless-stopped

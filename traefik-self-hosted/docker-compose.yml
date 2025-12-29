@@ -1,0 +1,63 @@
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik
+    restart: unless-stopped
+
+    security_opt:
+      - no-new-privileges:true
+
+    ports:
+      - "80:80"
+      - "443:443"
+      # - "443:443/tcp" # HTTP3
+      # - "443:443/udp"
+
+    environment:
+      CF_DNS_API_TOKEN: ${CF_DNS_API_TOKEN}
+      TRAEFIK_DASHBOARD_CREDENTIALS: ${TRAEFIK_DASHBOARD_CREDENTIALS}
+
+    env_file:
+      - .env
+
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/traefik.yml:/traefik.yml:ro
+      - traefik-letsencrypt:/letsencrypt
+      # - ./data/config.yml:/config.yml:ro
+
+    labels:
+      - "traefik.enable=true"
+
+      # HTTPS
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.harshbits.com`)"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
+
+      # Redirect HTTP to HTTPS (GLOBAL MIDDLEWARE)
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      - "traefik.http.routers.traefik.rule=Host(`traefik.harshbits.com`)"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.middlewares=redirect-to-https"
+      
+      # Auth
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
+      
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      
+    networks:
+      - traefik
+      - cloudflared
+      
+volumes:
+  traefik-letsencrypt:
+
+networks:
+  traefik:
+    external: true
+  
+  cloudflared:
+    external: true

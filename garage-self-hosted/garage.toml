@@ -1,0 +1,27 @@
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+replication_factor = 1
+
+rpc_bind_addr = "[::]:3901"
+rpc_public_addr = "127.0.0.1:3901"
+rpc_secret = "40290ecae664ab3a9d1892be72824bafb720dc358b6764aa01284a5b476c4c44"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "[::]:3900"
+root_domain = ".s3.harshbits.com"
+
+[s3_web]
+bind_addr = "[::]:3902"
+root_domain = ".webs3.harshbits.com"
+index = "index.html"
+
+[k2v_api]
+api_bind_addr = "[::]:3904"
+
+[admin]
+api_bind_addr = "[::]:3903"
+admin_token = "xyYS5gVU5dc52PkvicCjJt3fbgXxuyuD7y8Zp8lnGBw="
+metrics_token = "33gXj5Ap8hFIKqRtiZ3SMtDfYcYnywzuBegboaCOqkU="

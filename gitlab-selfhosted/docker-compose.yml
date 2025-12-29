@@ -1,0 +1,40 @@
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: unless-stopped
+    hostname: 'gitlab.harshbits.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.harshbits.com'
+    # ports:
+      # - '80:80'
+      # - '443:443'
+      # - '22:22'
+    volumes:
+      - './GITLAB_HOME/config:/etc/gitlab'
+      - './GITLAB_HOME/logs:/var/log/gitlab'
+      - './GITLAB_HOME/data:/var/opt/gitlab'
+    
+    networks:
+      - traefik
+
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.harshbits.com`)"
+      - "traefik.http.routers.gitlab.entrypoints=http"
+      - "traefik.http.routers.gitlab.middlewares=redirect-to-https"
+
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      - "traefik.http.routers.gitlab-secure.rule=Host(`gitlab.harshbits.com`)"
+      - "traefik.http.routers.gitlab-secure.entrypoints=https"
+
+      - "traefik.http.services.gitlab.loadbalancer.server.port=80"
+
+    shm_size: '256m'
+
+networks:
+  traefik:
+    external: true

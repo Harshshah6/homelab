@@ -1,0 +1,52 @@
+---
+services:
+  pihole:
+    image: docker.io/pihole/pihole:2025.11.1
+    restart: unless-stopped
+    container_name: pihole
+    environment:
+      - TZ=Asia/Kolkata
+      - PIHOLE_UID=1000
+      - PIHOLE_GID=1000
+      - FTLCONF_webserver_api_password=${WEBPASSWORD}
+      - FTLCONF_dns_listeningMode=all
+    networks:
+      traefik:
+      pihole_network:
+      minecraft-selfhosted_crafty_net:
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "123:123/udp"
+    volumes:
+      - pihole-dnsmasq:/etc/dnsmasq.d
+      - pihole-pihole:/etc/pihole
+    cap_add:
+      - NET_ADMIN
+      - SYS_TIME
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik
+      - traefik.http.services.pihole-web.loadBalancer.server.port=80
+      - traefik.http.routers.pihole-http.service=pihole-web
+      - traefik.http.routers.pihole-http.rule=Host(`pihole.harshbits.com`)
+      - traefik.http.routers.pihole-http.entrypoints=web
+      - traefik.http.routers.pihole-https.service=pihole-web
+      - traefik.http.routers.pihole-https.rule=Host(`pihole.harshbits.com`)
+      - traefik.http.routers.pihole-https.entrypoints=websecure
+      - traefik.http.routers.pihole-https.tls=true
+      - traefik.http.routers.pihole-https.tls.certresolver=cloudflare
+
+volumes:
+  pihole-dnsmasq:
+    driver: local
+  pihole-pihole:
+    driver: local
+
+networks:
+  pihole_network:
+    driver: bridge
+  traefik:
+    external: true
+  minecraft-selfhosted_crafty_net:
+    external: true

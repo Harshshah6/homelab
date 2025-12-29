@@ -1,0 +1,56 @@
+services:
+  tianji:
+    image: moonrailgun/tianji
+    container_name: tianji
+    # ports:
+    #   - "12345:12345"
+    environment:
+      DATABASE_URL: postgresql://tianji:tianji@postgrestianji:5432/tianji
+      JWT_SECRET: tf1lgzYXA1dB1RzD5aiX3MwlB6Am49szsPQ0BXRF+Ig=
+      ALLOW_REGISTER: "false"
+      ALLOW_OPENAPI: "true"
+      PUBLIC_URL: "tianji.harshbits.com" # for example: https://app.tianji.dev
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - traefik
+      - tianji-net
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.tianji.rule=Host(`tianji.harshbits.com`)"
+      - "traefik.http.routers.tianji.entrypoints=http"
+      - "traefik.http.routers.tianji.middlewares=redirect-to-https"
+
+      # HTTPS
+      - "traefik.http.routers.tianji-secure.rule=Host(`tianji.harshbits.com`)"
+      - "traefik.http.routers.tianji-secure.entrypoints=https"
+      - "traefik.http.routers.tianji-secure.tls=true"
+      - "traefik.http.routers.tianji-secure.tls.certresolver=cloudflare"
+
+      - "traefik.docker.network=traefik"
+
+      # Service
+      - "traefik.http.services.tianji.loadbalancer.server.port=12345"
+
+  postgres:
+    image: postgres:15.4-alpine
+    container_name: postgrestianji
+    environment:
+      POSTGRES_DB: tianji
+      POSTGRES_USER: tianji
+      POSTGRES_PASSWORD: tianji
+    volumes:
+      - tianji-db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - tianji-net
+
+volumes:
+  tianji-db-data:
+
+networks:
+  traefik:
+    external: true
+  tianji-net:

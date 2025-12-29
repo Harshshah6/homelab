@@ -1,0 +1,39 @@
+services:
+  termix:
+    image: ghcr.io/lukegus/termix:latest
+    container_name: termix
+    restart: unless-stopped
+    ports:
+      - "9081:8080"
+    volumes:
+      - termix-data:/app/data
+    environment:
+      PORT: "8080"
+    networks:
+      - termix-net
+    
+  ubuntu-ssh:
+    image: ubuntu:22.04
+    container_name: ubuntu-ssh
+    hostname: ubuntu-ssh
+    command: >
+      bash -c "
+      apt update &&
+      apt install -y openssh-server &&
+      mkdir -p /run/sshd &&
+      echo 'root:root' | chpasswd &&
+      sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&
+      sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config &&
+      /usr/sbin/sshd -D
+      "
+    networks:
+      - termix-net
+    restart: unless-stopped
+
+volumes:
+  termix-data:
+    driver: local
+
+networks:
+  termix-net:
+    driver: bridge

@@ -1,0 +1,25 @@
+services:
+  crafty:
+    image: registry.gitlab.com/crafty-controller/crafty-4:latest
+    container_name: crafty
+    restart: unless-stopped
+    # ports:
+    #   - "8443:8443"
+    #   - "25565:25565"
+    volumes:
+      - ./crafty/backups:/crafty/backups
+      - ./crafty/logs:/crafty/logs
+      - ./crafty/servers:/crafty/servers
+      - ./crafty/database:/crafty/database
+      - ./crafty/app/config:/crafty/app/config
+    environment:
+      - TZ=Etc/UTC
+    networks:
+      - nginx-proxy-manager
+      - cloudflared
+    
+networks:
+  nginx-proxy-manager:
+    external: true
+  cloudflared:
+    external: true
