@@ -43,8 +43,8 @@ services:
       - "traefik.http.routers.traefik.middlewares=redirect-to-https"
       
       # Auth
-      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       
       - "traefik.http.routers.traefik-secure.service=api@internal"
       

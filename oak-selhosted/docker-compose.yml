@@ -4,6 +4,28 @@ services:
     image: 'ghcr.io/bert-mccutchen/oak:latest' # https://github.com/bert-mccutchen/oak
     volumes:
         - './data:/rails/storage'
-    ports:
-        - '3000:80'
+    # ports:
+    #     - '3000:80'
     restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.oak.rule=Host(`oak.harshbits.com`)"
+      - "traefik.http.routers.oak.entrypoints=http"
+      - "traefik.http.routers.oak.middlewares=redirect-to-https"
+
+      # HTTPS
+      - "traefik.http.routers.oak-secure.rule=Host(`oak.harshbits.com`)"
+      - "traefik.http.routers.oak-secure.entrypoints=https"
+      - "traefik.http.routers.oak-secure.tls=true"
+      - "traefik.http.routers.oak-secure.tls.certresolver=cloudflare"
+
+      - "traefik.docker.network=traefik"
+
+      # Service
+      - "traefik.http.services.oak.loadbalancer.server.port=80"
+    networks:
+      - traefik
+networks:
+  traefik:
+    external: true
