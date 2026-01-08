@@ -1,0 +1,10 @@
+services:
+  playit:
+    image: ghcr.io/playit-cloud/playit-agent:0.16
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+    networks:
+      - nginx-proxy-manager
+networks:
+  nginx-proxy-manager:
+    external: true
