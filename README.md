@@ -8,6 +8,8 @@ A collection of Docker Compose configurations for various self-hosted applicatio
 - **[Traefik](traefik-self-hosted/)** - Modern reverse proxy and load balancer
 - **[Nginx Proxy Manager](nginx-proxy-manager/)** - User-friendly nginx reverse proxy
 - **[Cloudflared Tunnel](cloudflared-tunnel/)** - Secure tunnel for exposing services
+- **[Playit.gg](playit.gg/)** - Global port forwarding and tunnel
+- **[Onion Site](onion-site/)** - Tor hidden service hosting
 
 ### DNS & Security
 - **[Pi-hole](pihole-selfhosted/)** - Network-wide ad blocking and DNS
@@ -16,6 +18,7 @@ A collection of Docker Compose configurations for various self-hosted applicatio
 ### Storage & File Management
 - **[Garage](garage-self-hosted/)** - Lightweight S3-compatible distributed storage
 - **[File Browser](filebrowser-selfhosted/)** - Simple web-based file manager
+- **[DropSync](DropSync/)** - File synchronization service
 
 ### Container Management
 - **[Portainer](portainer-selfhosted/)** - Docker container management UI
@@ -27,11 +30,14 @@ A collection of Docker Compose configurations for various self-hosted applicatio
 
 ### Gaming
 - **[Minecraft](minecraft-selfhosted/)** - Self-hosted Minecraft server
+- **[reVCDOS](reVCDOS/)** - Web-based DOS emulator/game server
 
 ### Development & Tools
 - **[GitLab](gitlab-selfhosted/)** - Self-hosted Git repository and CI/CD
+- **[Appwrite](appwrite/)** - Backend-as-a-Service (BaaS) platform
 - **[Oak](oak-selhosted/)** - Homepage for self-hosted services
 - **[Notifuse](notifuse-selfhosted/)** - Email notification platform
+- **[Shlink](shlink/)** - Self-hosted URL shortener
 
 ## Quick Start
 
@@ -62,7 +68,9 @@ docker-compose up -d
 
 ```
 .
+├── DropSync/                  # File synchronization service
 ├── adguard-home/              # DNS privacy protection
+├── appwrite/                  # Backend-as-a-Service platform
 ├── cloudflared-tunnel/        # Tunnel configuration with .env
 ├── filebrowser-selfhosted/    # File browser service
 ├── garage-self-hosted/        # S3-compatible storage
@@ -72,8 +80,12 @@ docker-compose up -d
 ├── nginx-proxy-manager/       # Reverse proxy
 ├── notifuse-selfhosted/       # Emailing platform
 ├── oak-selhosted/             # Homepage for self-hosted services.
+├── onion-site/                # Tor hidden service hosting
 ├── pihole-selfhosted/         # Network ad blocking
+├── playit.gg/                 # Global port forwarding
 ├── portainer-selfhosted/      # Container management
+├── reVCDOS/                   # Web-based DOS emulator
+├── shlink/                    # URL shortener
 ├── termix-selfhosted/         # SSH access, files, monitoring, and Docker control
 ├── tianji-selfhosted/         # Uptime monitoring
 └── traefik-self-hosted/       # Advanced reverse proxy
