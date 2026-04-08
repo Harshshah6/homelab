@@ -3,9 +3,9 @@ services:
     image: registry.gitlab.com/crafty-controller/crafty-4:latest
     container_name: crafty
     restart: unless-stopped
-    # ports:
+    ports:
     #   - "8443:8443"
-    #   - "25565:25565"
+      - "25565:25565"
     volumes:
       - ./crafty/backups:/crafty/backups
       - ./crafty/logs:/crafty/logs

@@ -1,0 +1,23 @@
+services:
+  web:
+    image: nginx:alpine
+    container_name: onion_web
+    volumes:
+      - ./web:/usr/share/nginx/html:ro
+    restart: always
+
+  tor:
+    image: alpine
+    container_name: onion_tor
+    depends_on:
+      - web
+    volumes:
+      - ./tor/torrc:/etc/tor/torrc
+      - tor_data:/var/lib/tor
+    command: >
+      sh -c "apk add --no-cache tor &&
+             tor -f /etc/tor/torrc"
+    restart: always
+
+volumes:
+  tor_data:

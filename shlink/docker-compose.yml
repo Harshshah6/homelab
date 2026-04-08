@@ -1,0 +1,31 @@
+services:
+  shlink:
+    image: 'shlinkio/shlink:stable'
+    environment:
+      - GEOLITE_LICENSE_KEY=kjh23ljkbndskj345
+      - IS_HTTPS_ENABLED=true
+      - DEFAULT_DOMAIN=shlink.harshbits.com
+    # ports:
+    #   - '8080:8080'
+    container_name: my_shlink
+    networks:
+      - traefik
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.shlink.rule=Host(`shlink.harshbits.com`)"
+      - "traefik.http.routers.shlink.entrypoints=http"
+      - "traefik.http.routers.shlink.middlewares=redirect-to-https"
+
+      # HTTPS
+      - "traefik.http.routers.shlink-secure.rule=Host(`shlink.harshbits.com`)"
+      - "traefik.http.routers.shlink-secure.entrypoints=https"
+      - "traefik.http.routers.shlink-secure.tls=true"
+      - "traefik.http.routers.shlink-secure.tls.certresolver=cloudflare"
+
+      # Service
+      - "traefik.http.services.shlink.loadbalancer.server.port=8080"
+
+networks:
+  traefik:
+    external: true
